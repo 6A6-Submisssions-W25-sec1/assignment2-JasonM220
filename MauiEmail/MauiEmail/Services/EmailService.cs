@@ -11,6 +11,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using UniqueId = MailKit.UniqueId;
+using MauiEmail.Models;
+using MailKit.Search;
 
 namespace MauiEmail.Services
 {
@@ -105,7 +107,7 @@ namespace MauiEmail.Services
             }
         }
 
-        public async Task DeleteMessageAsync(int uid)
+        public async Task DeleteMessageAsync(UniqueId uid)
         {
             try
             {
@@ -113,7 +115,6 @@ namespace MauiEmail.Services
 
                 await inbox.OpenAsync(FolderAccess.ReadWrite);
 
-                UniqueId id = new UniqueId((uint)uid);
 
                 await inbox.StoreAsync(uid, new StoreFlagsRequest(StoreAction.Add, MessageFlags.Deleted) { Silent = true });
 
@@ -123,6 +124,82 @@ namespace MauiEmail.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"Error deleting email: {ex.Message}");
+            }
+        }
+
+        async Task<IEnumerable<ObservableMessage>?> IEmailService.FetchAllMessages()
+        {
+            try
+            {
+                var inbox = _imapClient.Inbox;
+
+                var messages = new List<ObservableMessage>();
+                foreach (var summary in await inbox.FetchAsync(0, -1, MessageSummaryItems.Envelope))
+                {
+                    messages.Add(new ObservableMessage(summary));
+                }
+
+                return messages;
+
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching emails: {ex.Message}");
+                return new List<ObservableMessage>();
+            }
+        }
+
+        public async Task MarkAsReadAsync(UniqueId uid)
+        {
+            try
+            {
+                var inbox = _imapClient.Inbox;
+                await inbox.OpenAsync(FolderAccess.ReadWrite);
+
+                await inbox.StoreAsync(uid, new StoreFlagsRequest(StoreAction.Add, MessageFlags.Seen));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error marking email as read: {ex.Message}");
+            }
+        }
+
+        public async Task MarkAsFavoriteAsync(UniqueId uid)
+        {
+            try
+            {
+                var inbox = _imapClient.Inbox;
+                await inbox.OpenAsync(FolderAccess.ReadWrite);
+
+                await inbox.StoreAsync(uid, new StoreFlagsRequest(StoreAction.Add, MessageFlags.Flagged));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error marking email as favorite: {ex.Message}");
+            }
+        }
+
+        public async Task<IEnumerable<UniqueId>> SearchEmailsAsync(string query)
+        {
+            try
+            {
+                var inbox = _imapClient.Inbox;
+                await inbox.OpenAsync(FolderAccess.ReadOnly);
+
+                var searchQuery = SearchQuery.Or(
+                    SearchQuery.SubjectContains(query),
+                    SearchQuery.BodyContains(query)
+                ).Or(SearchQuery.FromContains(query));
+
+                var matchingMessages = await inbox.SearchAsync(searchQuery);
+
+                return matchingMessages;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error performing search query: {ex.Message}");
+                return Enumerable.Empty<UniqueId>();
             }
         }
 
