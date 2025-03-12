@@ -9,7 +9,7 @@ using MimeKit;
 
 namespace MauiEmail.Models
 {
-    internal class ObservableMessage : INotifyPropertyChanged
+    public class ObservableMessage : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 

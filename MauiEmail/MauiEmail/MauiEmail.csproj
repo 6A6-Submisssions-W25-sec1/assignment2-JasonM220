@@ -70,8 +70,12 @@
 
 	<ItemGroup>
 	  <Folder Include="DataRepos\" />
-	  <Folder Include="Converters\" />
-	  <Folder Include="Views\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Views\InboxPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	</ItemGroup>
 
 </Project>

@@ -127,11 +127,17 @@ namespace MauiEmail.Services
             }
         }
 
-        async Task<IEnumerable<ObservableMessage>?> IEmailService.FetchAllMessages()
+        public async Task<IEnumerable<ObservableMessage>?> FetchAllMessages()
         {
             try
             {
+                await this.StartSendClientAsync();
+                await this.StartRetreiveClientAsync();
+
                 var inbox = _imapClient.Inbox;
+
+                await inbox.OpenAsync(FolderAccess.ReadOnly);
+
 
                 var messages = new List<ObservableMessage>();
                 foreach (var summary in await inbox.FetchAsync(0, -1, MessageSummaryItems.Envelope))

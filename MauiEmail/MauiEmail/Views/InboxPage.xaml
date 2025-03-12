@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:MauiEmail.Converters"
+             x:Class="MauiEmail.Views.InboxPage"
+             Title="InboxPage">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:EmailConverter x:Key="EmailConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Shell.TitleView>
+        <SearchBar x:Name="SearchEntry"
+                   Placeholder="Search emails..."
+                   SearchCommand="{Binding SearchCommand}" />
+    </Shell.TitleView>
+
+    <ContentPage.Content>
+        <CollectionView x:Name="EmailList"
+                        ItemsSource="{Binding Emails}"
+                        SelectionMode="Single"
+                        SelectionChanged="OnEmailSelected"
+                        >
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <SwipeView>
+                        <SwipeView.RightItems>
+                            <SwipeItems>
+                                <SwipeItem Text="Favorite"
+                                           Command="{Binding FavoriteCommand}"
+                                           CommandParameter="{Binding .}" 
+                                           BackgroundColor="Gold"/>
+                                <SwipeItem Text="Delete"
+                                           Command="{Binding DeleteCommand}"
+                                           CommandParameter="{Binding .}" 
+                                           BackgroundColor="Red"/>
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+
+                        <Grid Padding="20" ColumnSpacing="30">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+
+                            <Frame CornerRadius="50"
+                               WidthRequest="70"
+                               HeightRequest="70"
+                               BackgroundColor="Blue"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center"
+                               Grid.Column="0"
+                                >
+                               <Label Text="{Binding From.LocalPart, Converter={StaticResource EmailConverter}}"
+                                   FontSize="24"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="Center"
+                                   TextColor="White" />
+                            </Frame>
+
+
+                            <StackLayout Grid.Column="1">
+                                <Label Text="{Binding From.LocalPart}"
+                                       FontSize="16"
+                                       FontAttributes="Bold"/>
+                                <Label Text="{Binding Subject}"
+                                       FontSize="14"/>
+                                <BoxView HeightRequest="2"
+                                         BackgroundColor="{Binding IsRead, Converter={StaticResource ReadStatusConverter}}" />
+                            </StackLayout>
+                        </Grid>
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </ContentPage.Content>
+</ContentPage>

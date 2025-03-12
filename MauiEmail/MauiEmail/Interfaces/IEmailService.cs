@@ -10,16 +10,15 @@ using MailKit;
 
 namespace MauiEmail.Interfaces
 {
-    internal interface IEmailService
+    public interface IEmailService
     {
         Task StartSendClientAsync();
         Task DisconnectSendClientAsync();
         Task StartRetreiveClientAsync();
         Task DisconnectRetreiveClientAsync();
-
         Task SendMessageAsync(MimeMessage message);
+        Task<IEnumerable<ObservableMessage>?> FetchAllMessages();
         Task<IEnumerable<MimeMessage>> DownloadAllEmailsAsync();
         Task DeleteMessageAsync(MailKit.UniqueId uid);
-        Task<IEnumerable<ObservableMessage>?> FetchAllMessages();
     }
 }
