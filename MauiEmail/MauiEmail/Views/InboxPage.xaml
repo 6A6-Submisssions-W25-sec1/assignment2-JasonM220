@@ -7,6 +7,7 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <local:EmailConverter x:Key="EmailConverter"/>
+            <local:ReadStatusConverter x:Key="ReadStatusConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
     <Shell.TitleView>
@@ -37,28 +38,33 @@
                             </SwipeItems>
                         </SwipeView.RightItems>
 
-                        <Grid Padding="20" ColumnSpacing="30">
+                        <Grid Padding="20" ColumnSpacing="50">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="40"/>
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
+                            <HorizontalStackLayout Grid.Column="0" Spacing="5">
+                                <BoxView HeightRequest="70"
+                                     WidthRequest="5"
+                                     BackgroundColor="{Binding IsRead, Converter={StaticResource ReadStatusConverter}}" 
+                                     CornerRadius="20"/>
 
-                            <Frame CornerRadius="50"
-                               WidthRequest="70"
-                               HeightRequest="70"
-                               BackgroundColor="Blue"
-                               VerticalOptions="Center"
-                               HorizontalOptions="Center"
-                               Grid.Column="0"
-                                >
-                               <Label Text="{Binding From.LocalPart, Converter={StaticResource EmailConverter}}"
-                                   FontSize="24"
+                                <Frame CornerRadius="50"
+                                   WidthRequest="70"
+                                   HeightRequest="70"
+                                   BackgroundColor="Blue"
                                    VerticalOptions="Center"
                                    HorizontalOptions="Center"
-                                   TextColor="White" />
-                            </Frame>
-
+                                    >
+                                   <Label Text="{Binding From.LocalPart, Converter={StaticResource EmailConverter}}"
+                                       FontSize="24"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="Center"
+                                       TextColor="White" />
+                                  
+                                </Frame>
+                            </HorizontalStackLayout>
 
                             <StackLayout Grid.Column="1">
                                 <Label Text="{Binding From.LocalPart}"
@@ -66,9 +72,9 @@
                                        FontAttributes="Bold"/>
                                 <Label Text="{Binding Subject}"
                                        FontSize="14"/>
-                                <BoxView HeightRequest="2"
-                                         BackgroundColor="Blue" />
+                              
                             </StackLayout>
+
                         </Grid>
                     </SwipeView>
                 </DataTemplate>

@@ -53,9 +53,9 @@ public partial class InboxPage : ContentPage
         var selectedEmail = e.CurrentSelection.FirstOrDefault() as ObservableMessage;
         if (selectedEmail != null)
         {
+            selectedEmail.IsRead = true;
             await App.EmailService.MarkAsReadAsync(selectedEmail.UniqueId);
 
-            //await Navigation.PushAsync(new ReadPage(selectedEmail));
         }
 
         EmailList.SelectedItem = null;
