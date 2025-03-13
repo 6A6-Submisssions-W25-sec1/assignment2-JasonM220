@@ -9,6 +9,8 @@ public partial class InboxPage : ContentPage
     public ObservableCollection<ObservableMessage> Emails { get; set; }
 
     private bool IsLoading = false;
+    public ICommand DeleteCommand { private set; get; }
+    public ICommand FavouriteCommand { private set; get; }
 
     public InboxPage()
     {
@@ -16,6 +18,9 @@ public partial class InboxPage : ContentPage
         BindingContext = this;
 
         Emails = new ObservableCollection<ObservableMessage>();
+        DeleteCommand = new Command<ObservableMessage>(DeleteEmail);
+        FavouriteCommand = new Command<ObservableMessage>(FavouriteEmail);
+
 
         DownloadEmails();
     }
@@ -25,6 +30,17 @@ public partial class InboxPage : ContentPage
         var messages = await App.EmailService.FetchAllMessages();
         foreach (var msg in messages)
             Emails.Add(msg);
+    }
+
+    private async void DeleteEmail(ObservableMessage email)
+    {
+        Emails.Remove(email);
+        await App.EmailService.DeleteMessageAsync(email.UniqueId);
+    }  
+    private async void FavouriteEmail(ObservableMessage email)
+    {
+        email.IsFavourite = true;
+        await App.EmailService.MarkAsFavoriteAsync(email.UniqueId);
     }
 
 

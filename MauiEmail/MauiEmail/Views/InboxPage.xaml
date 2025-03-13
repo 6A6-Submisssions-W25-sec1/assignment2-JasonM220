@@ -27,11 +27,11 @@
                         <SwipeView.RightItems>
                             <SwipeItems>
                                 <SwipeItem Text="Favorite"
-                                           Command="{Binding FavoriteCommand}"
+                                           Command="{Binding Source={x:Reference Name=EmailList}, Path=BindingContext.FavouriteCommand}"
                                            CommandParameter="{Binding .}" 
                                            BackgroundColor="Gold"/>
                                 <SwipeItem Text="Delete"
-                                           Command="{Binding DeleteCommand}"
+                                           Command="{Binding Source={x:Reference Name=EmailList}, Path=BindingContext.DeleteCommand}"
                                            CommandParameter="{Binding .}" 
                                            BackgroundColor="Red"/>
                             </SwipeItems>
@@ -67,7 +67,7 @@
                                 <Label Text="{Binding Subject}"
                                        FontSize="14"/>
                                 <BoxView HeightRequest="2"
-                                         BackgroundColor="{Binding IsRead, Converter={StaticResource ReadStatusConverter}}" />
+                                         BackgroundColor="Blue" />
                             </StackLayout>
                         </Grid>
                     </SwipeView>
