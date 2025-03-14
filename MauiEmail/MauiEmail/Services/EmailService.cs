@@ -140,7 +140,7 @@ namespace MauiEmail.Services
 
 
                 var messages = new List<ObservableMessage>();
-                foreach (var summary in await inbox.FetchAsync(0, -1, MessageSummaryItems.Envelope | MessageSummaryItems.UniqueId))
+                foreach (var summary in await inbox.FetchAsync(0, -1, MessageSummaryItems.Envelope | MessageSummaryItems.UniqueId | MessageSummaryItems.Flags))
                 {
                     messages.Add(new ObservableMessage(summary));
                 }

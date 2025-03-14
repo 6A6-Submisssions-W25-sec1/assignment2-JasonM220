@@ -30,8 +30,8 @@ namespace MauiEmail.Models
             To = (List<MailboxAddress>)message.Envelope.To.Mailboxes.ToList();
             Subject = message.Envelope.Subject;
             Date = (DateTimeOffset)message.Envelope.Date;
-            IsRead = (message.Flags == MessageFlags.Seen);
-            IsFavourite = (message.Flags == MessageFlags.Flagged);
+            IsRead = (message.Flags & MessageFlags.Seen) == MessageFlags.Seen;
+            IsFavourite = (message.Flags & MessageFlags.Flagged) == MessageFlags.Flagged;
             Body = null;
             HtmlBody = null;
 
